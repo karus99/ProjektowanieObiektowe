@@ -11,7 +11,7 @@ public class DatabaseHandler
     {
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:D:\\_karus\\coding\\java\\projektowanie\\src\\test.sqlite");
+            connection = DriverManager.getConnection("jdbc:sqlite:src\\test.sqlite");
             statement = connection.createStatement();
             statement.setQueryTimeout(30);
         }
