@@ -3,15 +3,20 @@ import java.util.ArrayList;
 
 public class DatabaseHandler
 {
-    private static DatabaseHandler instance = null;
+    private static DatabaseHandler instance_sqlite = null;
+    private static DatabaseHandler instance_mysql = null;
     private Connection connection = null;
     private Statement statement = null;
 
-    protected DatabaseHandler()
+    protected DatabaseHandler(String type)
     {
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:src\\test.sqlite");
+            if(type.equals("sqlite"))
+                connection = DriverManager.getConnection("jdbc:sqlite:src\\test.sqlite");
+            else
+                connection = DriverManager.getConnection("jdbc:mysql:src\\ADRES_DO_MYSQL");
+
             statement = connection.createStatement();
             statement.setQueryTimeout(30);
         }
@@ -21,14 +26,26 @@ public class DatabaseHandler
         }
     }
 
-    public static DatabaseHandler getInstance()
+    public static DatabaseHandler getInstance(String type)
     {
-        if(instance == null)
+        if(type.equals("sqlite"))
         {
-            instance = new DatabaseHandler();
+            if(instance_sqlite == null)
+            {
+                instance_sqlite = new DatabaseHandler(type);
+                return instance_sqlite;
+            }
+            return instance_sqlite;
         }
-
-        return instance;
+        else
+        {
+            if(instance_mysql == null)
+            {
+                instance_mysql = new DatabaseHandler(type);
+                return instance_mysql;
+            }
+            return instance_mysql;
+        }
     }
 
     public int insert(Student student)
@@ -149,7 +166,7 @@ public class DatabaseHandler
 
     public static void main(String args[])
     {
-        DatabaseHandler db = DatabaseHandler.getInstance();
+        DatabaseHandler db = DatabaseHandler.getInstance("sqlite");
 
         Student newStudent = new Student("Karol", "Drwila");
         newStudent.setKey(db.insert(newStudent));

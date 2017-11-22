@@ -68,7 +68,7 @@ class Student
 
     private void getStudentData()
     {
-        DatabaseHandler db = DatabaseHandler.getInstance();
+        DatabaseHandler db = DatabaseHandler.getInstance("sqlite");
         Student temp = db.getByKey(key);
 
         this.firstName = temp.getFirstName();
