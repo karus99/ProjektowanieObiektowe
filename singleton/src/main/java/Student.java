@@ -1,19 +1,77 @@
 class Student
 {
-    String name;
 
-    Student(String name)
+    String firstName = "";
+    String surname = "";
+    int key = -1;
+
+    Student(String firstName, String surname)
     {
-        this.name = name;
+        this.firstName = firstName;
+        this.surname = surname;
     }
 
-    public String getName()
+    Student(int key)
     {
-        return name;
+        this.key = key;
     }
 
-    public void setName(String name)
+    public String getFirstName()
     {
-        this.name = name;
+        if(firstName.equals(""))
+        {
+            getStudentData();
+        }
+
+        return firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getSurname()
+    {
+        if(surname.equals(""))
+        {
+            getStudentData();
+        }
+
+        return surname;
+    }
+
+    public void setSurname(String surname)
+    {
+        this.surname = surname;
+    }
+
+    public int getKey()
+    {
+        return key;
+    }
+
+    public void setKey(int key)
+    {
+        this.key = key;
+    }
+
+    public String toString()
+    {
+        return getFirstName() + " " + getSurname();
+    }
+
+    public String toStringRaw()
+    {
+        return "[KEY: " + getKey() + " | " + getFirstName() + " " + getSurname() + "]";
+    }
+
+    private void getStudentData()
+    {
+        DatabaseHandler db = DatabaseHandler.getInstance();
+        Student temp = db.getByKey(key);
+
+        this.firstName = temp.getFirstName();
+        this.surname = temp.getSurname();
     }
 }

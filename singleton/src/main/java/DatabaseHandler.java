@@ -17,7 +17,7 @@ public class DatabaseHandler
         }
         catch (SQLException e)
         {
-            System.out.println("SQL nie działa");
+            System.out.println("ERROR: Cannot connect to SQL");
         }
     }
 
@@ -31,11 +31,33 @@ public class DatabaseHandler
         return instance;
     }
 
-    public void insertStudent(Student student)
+    public int insert(Student student)
+    {
+        int id = -1;
+        try
+        {
+            statement.executeUpdate("INSERT INTO students (firstname, surname) " +
+                    "VALUES ('" + student.getFirstName() + "', '" + student.getSurname() + "')");
+
+            ResultSet data = statement.executeQuery("SELECT MAX(key) as highest FROM students");
+            while(data.next())
+            {
+                id = data.getInt("highest");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
+    public void delete(Student student)
     {
         try
         {
-            statement.executeUpdate("INSERT INTO studenci (imie) VALUES ('" + student.getName() + "')");
+            statement.executeUpdate("DELETE FROM students WHERE key = '" + student.getKey() + "'");
         }
         catch (SQLException e)
         {
@@ -43,30 +65,37 @@ public class DatabaseHandler
         }
     }
 
-    public void removeStudent(Student student)
+    public Student getByKey(int key)
     {
+        Student result = null;
         try
         {
-            statement.executeUpdate("DELETE FROM studenci WHERE imie = '" + student.getName() + "'");
+            ResultSet data = statement.executeQuery("SELECT firstName, surname FROM students WHERE key = " + key);
+
+            while(data.next())
+            {
+                result = new Student(data.getString("firstName"), data.getString("surname"));
+            }
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             e.printStackTrace();
         }
+
+        return result;
     }
 
-    public ArrayList<Student> getAllStudents()
+    public ArrayList<Student> getAll()
     {
-        ResultSet data = null;
         ArrayList<Student> results = new ArrayList();
 
         try
         {
-            data = statement.executeQuery("SELECT * FROM studenci");
+            ResultSet data = statement.executeQuery("SELECT key FROM students");
 
             while(data.next())
             {
-                Student temp = new Student(data.getString("imie"));
+                Student temp = new Student(data.getInt("key"));
                 results.add(temp);
             }
         }
@@ -78,23 +107,86 @@ public class DatabaseHandler
         return results;
     }
 
+    public Student getOne()
+    {
+        Student result = null;
+        try
+        {
+            ResultSet data = statement.executeQuery("SELECT key FROM students ORDER BY key DESC LIMIT 1");
+
+            if(data.next())
+            {
+                result = new Student(data.getInt("key"));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public void update(Student student)
+    {
+        if(student.getKey() == -1)
+        {
+            System.out.println("ERROR: Student wasn't inserted into database!");
+            return;
+        }
+
+        try
+        {
+            statement.executeUpdate("UPDATE students " +
+                    "SET firstName = '" + student.getFirstName() +"', surname = '" + student.getSurname() +"'" +
+                    "WHERE key = " + student.getKey());
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String args[])
     {
         DatabaseHandler db = DatabaseHandler.getInstance();
 
-        Student newStudent = new Student("Karol");
-        db.insertStudent(newStudent);
+        Student newStudent = new Student("Karol", "Drwila");
+        newStudent.setKey(db.insert(newStudent));
 
-        ArrayList<Student> students = db.getAllStudents();
+        db.insert(new Student("Jan", "Kowalski"));
+        db.insert(new Student("Anna", "Nowak"));
+
+        System.out.println(db.getOne().toStringRaw());
+
+        System.out.println("==== STUDENTS LIST ====");
+        ArrayList<Student> students = db.getAll();
         for(Student student: students)
         {
-            System.out.println("Imię: " + student.getName());
-
-            if(student.getName().equals("Karol"))
-            {
-                db.removeStudent(student);
-            }
+            System.out.println(student.toStringRaw());
         }
 
+        newStudent.setFirstName("Tobjorn");
+        newStudent.setSurname("Rudobrody");
+
+        db.update(newStudent);
+
+        System.out.println("==== STUDENTS LIST ====");
+        students = db.getAll();
+        for(Student student: students)
+        {
+            System.out.println(student.toStringRaw());
+        }
+
+        db.delete(newStudent);
+
+        System.out.println("==== STUDENTS LIST ====");
+        students = db.getAll();
+        for(Student student: students)
+        {
+            System.out.println(student.toStringRaw());
+
+            db.delete(student);
+        }
     }
 }
