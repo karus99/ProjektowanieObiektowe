@@ -1,3 +1,5 @@
+package org.example.adapter;
+
 class Student
 {
 

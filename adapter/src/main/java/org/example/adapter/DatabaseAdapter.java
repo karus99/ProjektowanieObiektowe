@@ -1,5 +1,11 @@
+package org.example.adapter;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 interface DatabaseType
 {
@@ -8,6 +14,8 @@ interface DatabaseType
 
 class SQLiteDatabase implements DatabaseType
 {
+    private static final Logger LOG = LogManager.getRootLogger();
+
     public Connection connect()
     {
         Connection connection = null;
@@ -17,7 +25,7 @@ class SQLiteDatabase implements DatabaseType
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
         return connection;
@@ -26,6 +34,8 @@ class SQLiteDatabase implements DatabaseType
 
 class MySQLDatabase implements DatabaseType
 {
+    private static final Logger LOG = LogManager.getRootLogger();
+
     public Connection connect()
     {
         Connection connection = null;
@@ -35,7 +45,7 @@ class MySQLDatabase implements DatabaseType
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
         return connection;
@@ -44,6 +54,8 @@ class MySQLDatabase implements DatabaseType
 
 class PostgresDatabase implements DatabaseType
 {
+    private static final Logger LOG = LogManager.getRootLogger();
+
     public Connection connect()
     {
         Connection connection = null;
@@ -53,7 +65,7 @@ class PostgresDatabase implements DatabaseType
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
         return connection;
@@ -65,7 +77,7 @@ interface Database
     int insert(Student student);
     void delete(Student student);
     Student getByKey(int key);
-    ArrayList<Student> getAll();
+    List<Student> getAll();
     Student getOne();
     void update(Student student);
 }
@@ -77,10 +89,11 @@ public class DatabaseAdapter implements Database
     Connection connection;
     Statement statement;
     static DatabaseAdapter instance = null;
+    private static final Logger LOG = LogManager.getRootLogger();
 
     DatabaseAdapter(String type)
     {
-        this.type = type;
+        DatabaseAdapter.setType(type);
         if(type.equals("sqlite"))
         {
             dbInstance = new SQLiteDatabase();
@@ -104,29 +117,36 @@ public class DatabaseAdapter implements Database
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 
-    public static DatabaseAdapter getInstance(String type_)
+    public static void setType(String newType)
     {
-        if(instance == null || !type.equals(type_))
+        type = newType;
+    }
+
+    public static DatabaseAdapter getInstance(String newType)
+    {
+        if(instance == null || !type.equals(newType))
         {
-            instance = new DatabaseAdapter(type_);
+            instance = new DatabaseAdapter(newType);
         }
 
         return instance;
-    };
+    }
 
     public int insert(Student student)
     {
+        ResultSet data = null;
+
         int id = -1;
         try
         {
             statement.executeUpdate("INSERT INTO students (firstname, surname) " +
                     "VALUES ('" + student.getFirstName() + "', '" + student.getSurname() + "')");
 
-            ResultSet data = statement.executeQuery("SELECT MAX(key) as highest FROM students");
+            data = statement.executeQuery("SELECT MAX(key) as highest FROM students");
             while(data.next())
             {
                 id = data.getInt("highest");
@@ -134,7 +154,19 @@ public class DatabaseAdapter implements Database
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(data != null)
+                    data.close();
+            }
+            catch(SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
         }
 
         return id;
@@ -148,16 +180,21 @@ public class DatabaseAdapter implements Database
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 
     public Student getByKey(int key)
     {
+        ResultSet data = null;
         Student result = null;
+        PreparedStatement pstmt = null;
         try
         {
-            ResultSet data = statement.executeQuery("SELECT firstName, surname FROM students WHERE key = " + key);
+            String query = "SELECT firstName, surname FROM students WHERE key = ?";
+            pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, key);  // Compliant; PreparedStatements escape their inputs.
+            data = pstmt.executeQuery();
 
             while(data.next())
             {
@@ -166,19 +203,42 @@ public class DatabaseAdapter implements Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(data != null)
+                    data.close();
+            }
+            catch(SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
+
+            try
+            {
+                if(pstmt != null)
+                    pstmt.close();
+            }
+            catch(SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
         }
 
         return result;
     }
 
-    public ArrayList<Student> getAll()
+    public List<Student> getAll()
     {
+        ResultSet data = null;
         ArrayList<Student> results = new ArrayList();
 
         try
         {
-            ResultSet data = statement.executeQuery("SELECT key FROM students");
+            data = statement.executeQuery("SELECT key FROM students");
 
             while(data.next())
             {
@@ -188,7 +248,21 @@ public class DatabaseAdapter implements Database
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (data != null)
+                {
+                    data.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
         }
 
         return results;
@@ -196,10 +270,11 @@ public class DatabaseAdapter implements Database
 
     public Student getOne()
     {
+        ResultSet data = null;
         Student result = null;
         try
         {
-            ResultSet data = statement.executeQuery("SELECT key FROM students ORDER BY key DESC LIMIT 1");
+            data = statement.executeQuery("SELECT key FROM students ORDER BY key DESC LIMIT 1");
 
             if(data.next())
             {
@@ -208,7 +283,21 @@ public class DatabaseAdapter implements Database
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (data != null)
+                {
+                    data.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
         }
 
         return result;
@@ -218,7 +307,7 @@ public class DatabaseAdapter implements Database
     {
         if(student.getKey() == -1)
         {
-            System.out.println("ERROR: Student wasn't inserted into database!");
+            LOG.error("ERROR: Student wasn't inserted into database!");
             return;
         }
 
@@ -230,7 +319,7 @@ public class DatabaseAdapter implements Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 }

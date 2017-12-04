@@ -1,3 +1,5 @@
+package org.example.adapter;
+
 import java.util.ArrayList;
 
 public class Adapter
