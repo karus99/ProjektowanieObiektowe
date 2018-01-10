@@ -1,0 +1,4 @@
+GET,/test,TestResponse,getTestPage
+POST,/test,TestResponse,postTestPage
+PUT,/test,TestResponse,putTestPage
+DELETE,/test,TestResponse,deleteTestPage
