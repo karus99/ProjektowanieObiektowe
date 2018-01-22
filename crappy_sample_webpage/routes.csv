@@ -1,0 +1,3 @@
+GET,/,MainPage,getIndex
+GET,/all,MainPage,getAllElements
+POST,/api/element,API,insertElement

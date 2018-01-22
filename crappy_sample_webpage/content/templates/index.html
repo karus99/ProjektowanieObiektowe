@@ -1,0 +1,50 @@
+
+    <h2>Welcome to my crappy sample web page!</h2>
+    <p>
+        Test some features below:
+    </p>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Home</li>
+    </ol>
+    <hr>
+    <h4>GET Example #1</h4>
+    <p>
+        This page :D<br/>
+        <a class="btn btn-outline-primary" href="/">Go There <span class="badge badge-default">/</span></a>
+    </p>
+    <hr>
+    <h4>GET Example #2</h4>
+    <p>
+        List of all elements<br/>
+        <a class="btn btn-outline-primary" href="/all">Go There <span class="badge badge-default">/all</span></a>
+    </p>
+    <hr>
+    <h4>GET Example #3</h4>
+    <p>
+        Only #1 element<br/>
+        <a class="btn btn-outline-primary" href="/first">Go There <span class="badge badge-default">/first</span></a>
+    </p>
+    <hr>
+    <h4>GET Example #4</h4>
+    <p>
+        ?
+    </p>
+    <hr>
+    <h4>GET Example #5</h4>
+    <p>
+        List of all elements in JSON form<br/>
+        <a class="btn btn-outline-primary" href="/api/all">Go There <span class="badge badge-default">/api/all</span></a>
+    </p>
+    <hr>
+    <h4>POST Example #1</h4>
+    <form action="/api/element" method="POST">
+        <div class="form-group">
+            <label for="post1_name">Name</label>
+            <input id="post1_name" class="form-control" type="text" name="name" placeholder="Input name of element..."/>
+        </div>
+        <div class="form-group">
+            <label for="post1_qty">Qty.</label>
+            <input id="post1_qty" class="form-control" type="number" name="qty" placeholder="Input element's quantity..."/>
+        </div>
+        <button type="submit" class="btn btn-primary">POST data</button>
+    </form>
