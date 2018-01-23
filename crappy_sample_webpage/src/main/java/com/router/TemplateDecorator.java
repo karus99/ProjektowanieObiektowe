@@ -58,3 +58,37 @@ class NormalTemplateDecorator extends TemplateDecorator
         return headerContent + decoratedTemplate.returnTemplate() + footerContent;
     }
 }
+
+class SimpleTemplateDecorator extends TemplateDecorator
+{
+    private String headerContent = "";
+    private String footerContent = "";
+    private static final Logger LOG = LogManager.getRootLogger();
+
+    public SimpleTemplateDecorator(Template decoratedTemplate, HashMap<String, Object> values)
+    {
+        super(decoratedTemplate, values);
+    }
+
+    @Override
+    public String returnTemplate()
+    {
+        try
+        {
+            headerContent = new String(Files.readAllBytes(Paths.get("content/templates/simple_header.html")));
+            footerContent = new String(Files.readAllBytes(Paths.get("content/templates/simple_footer.html")));
+        }
+        catch (IOException e)
+        {
+            LOG.error(e.getMessage());
+        }
+
+        TemplateEngine te = new TemplateEngine(headerContent, values);
+        headerContent = te.parseTemplate();
+
+        te = new TemplateEngine(footerContent, values);
+        footerContent = te.parseTemplate();
+
+        return headerContent + decoratedTemplate.returnTemplate() + footerContent;
+    }
+}

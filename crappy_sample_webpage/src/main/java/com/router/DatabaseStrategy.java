@@ -74,10 +74,21 @@ class PostgresDatabase implements DatabaseStrategy
 
 class Database
 {
+    public static Database instance = null;
     private DatabaseStrategy strategy;
     Connection connection;
     Statement statement;
     private static final Logger LOG = LogManager.getRootLogger();
+
+    public static Database getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new Database();
+        }
+
+        return instance;
+    }
 
     public void setDatabaseStrategy(DatabaseStrategy strategy)
     {
@@ -158,6 +169,7 @@ class Database
             while(data.next())
             {
                 result = new Element(data.getString("name"), data.getInt("qty"));
+                result.setKey(key);
             }
         }
         catch(SQLException e)
@@ -234,6 +246,41 @@ class Database
         try
         {
             data = statement.executeQuery("SELECT key FROM elements ORDER BY key DESC LIMIT 1");
+
+            if(data.next())
+            {
+                result = new Element(data.getInt("key"));
+            }
+        }
+        catch (SQLException e)
+        {
+            LOG.error(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (data != null)
+                {
+                    data.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                LOG.error(e.getMessage());
+            }
+        }
+
+        return result;
+    }
+
+    public Element getFirst()
+    {
+        ResultSet data = null;
+        Element result = null;
+        try
+        {
+            data = statement.executeQuery("SELECT key FROM elements ORDER BY key ASC LIMIT 1");
 
             if(data.next())
             {

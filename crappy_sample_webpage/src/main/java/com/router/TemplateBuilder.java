@@ -17,13 +17,19 @@ import java.util.regex.Pattern;
 
 interface TemplateBuilder
 {
-    String build();
+
+    String build(int decoratorType);
 }
 
 class HTTPTemplateBuilder implements TemplateBuilder
 {
+    static final int USE_NORMAL = 0;
+    static final int USE_SIMPLE = 1;
+    static final int USE_NONE = 2;
+
     private String configFileName = "";
     private String templateFileName = "";
+    private HashMap<String, Object> values = null;
 
     HTTPTemplateBuilder(String configFileName, String templateFileName)
     {
@@ -31,15 +37,38 @@ class HTTPTemplateBuilder implements TemplateBuilder
         this.templateFileName = templateFileName;
     }
 
-    public String build()
+    HTTPTemplateBuilder(HashMap<String, Object> values, String templateFileName)
     {
-        TemplateConfigReader tcr = new TemplateConfigReader(configFileName);
-        HashMap<String, Object> values = tcr.getConfig();
+        this.templateFileName = templateFileName;
+        this.values = values;
+    }
 
-//        HTTPTemplate ht = new HTTPTemplate(templateFileName, values);
-//        return ht.returnTemplate();
-        NormalTemplateDecorator ntd = new NormalTemplateDecorator(new HTTPTemplate(templateFileName, values), values);
-        return ntd.returnTemplate();
+    public String build(int decoratorType)
+    {
+        if(values == null)
+        {
+            TemplateConfigReader tcr = new TemplateConfigReader(configFileName);
+            values = tcr.getConfig();
+        }
+
+        Template t;
+
+        switch(decoratorType)
+        {
+            case USE_NORMAL:
+                t = new NormalTemplateDecorator(new HTTPTemplate(templateFileName, values), values);
+                break;
+
+            case USE_SIMPLE:
+                t = new SimpleTemplateDecorator(new HTTPTemplate(templateFileName, values), values);
+                break;
+
+            case USE_NONE:
+            default:
+                t = new HTTPTemplate(templateFileName, values);
+                break;
+        }
+        return t.returnTemplate();
     }
 }
 

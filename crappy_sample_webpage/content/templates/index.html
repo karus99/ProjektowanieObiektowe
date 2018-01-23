@@ -27,7 +27,10 @@
     <hr>
     <h4>GET Example #4</h4>
     <p>
-        ?
+        <select name="get4_elements">
+            {{GET4_ELEMENTS}}
+        </select>
+        <a id="get4_a" class="btn btn-outline-primary" href="/element/{{GET4_FIRST_KEY}}">Go There <span id="get4_badge" class="badge badge-default">/element/{{GET4_FIRST_KEY}}</span></a>
     </p>
     <hr>
     <h4>GET Example #5</h4>
@@ -47,4 +50,12 @@
             <input id="post1_qty" class="form-control" type="number" name="qty" placeholder="Input element's quantity..."/>
         </div>
         <button type="submit" class="btn btn-primary">POST data</button>
+    </form>
+    <hr>
+    <h4>DELETE Example #1</h4>
+    <form action="/api/element" method="DELETE">
+        <select id="delete1_key" name="key">
+            {{DELETE1_ELEMENTS}}
+        </select>
+        <button id="delete1_submit" type="button" class="btn btn-primary">DELETE data</button>
     </form>

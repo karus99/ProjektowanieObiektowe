@@ -1,3 +1,8 @@
 GET,/,MainPage,getIndex
 GET,/all,MainPage,getAllElements
+GET,/first,MainPage,getFirstElement
+GET,/element/[0-9]+,MainPage,getElement
+GET,/api/all,API,getAllElements
 POST,/api/element,API,insertElement
+DELETE,/api/element,API,deleteElement
+GET,/js/.*\.js,Files,getFile

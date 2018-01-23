@@ -11,6 +11,9 @@ public class Tester
 
     public static void main(String[] args) throws IOException
     {
+        Database db = Database.getInstance();
+        db.setDatabaseStrategy(new SQLiteDatabase());
+
         Routing routing = new Routing("routes.csv");
         routing.startServer(9000);
     }

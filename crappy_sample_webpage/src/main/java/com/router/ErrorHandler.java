@@ -16,7 +16,7 @@ public class ErrorHandler implements HttpHandler
     {
         LOG.debug("Error handler");
         HTTPTemplateBuilder tb = new HTTPTemplateBuilder("content/variables/404.json", "content/templates/404.html");
-        String response = tb.build();
+        String response = tb.build(HTTPTemplateBuilder.USE_SIMPLE);
 
         t.sendResponseHeaders(404, response.length());
         OutputStream os = t.getResponseBody();
