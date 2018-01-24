@@ -75,8 +75,8 @@ class SimpleTemplateDecorator extends TemplateDecorator
     {
         try
         {
-            headerContent = new String(Files.readAllBytes(Paths.get("content/templates/simple_header.html")));
-            footerContent = new String(Files.readAllBytes(Paths.get("content/templates/simple_footer.html")));
+            headerContent = new String(Files.readAllBytes(Paths.get("content/templates/header_simple.html")));
+            footerContent = new String(Files.readAllBytes(Paths.get("content/templates/footer_simple.html")));
         }
         catch (IOException e)
         {
