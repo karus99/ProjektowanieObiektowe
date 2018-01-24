@@ -9,10 +9,12 @@ import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class API
 {
@@ -93,8 +95,6 @@ public class API
         BufferedReader br = new BufferedReader(isr);
         String query = br.readLine();
 
-        int key = -1;
-
         if(query != null)
         {
             Map<String, Object> parameters = parseQuery(query);
@@ -106,6 +106,91 @@ public class API
         }
 
         String response = "{\"status\": \"OK\"}";
+
+        t.sendResponseHeaders(200, response.length());
+        OutputStream os = t.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    public void updateElement(HttpExchange t) throws IOException
+    {
+        Headers headers = t.getResponseHeaders();
+        headers.set(HEADER_CONTENT_TYPE, String.format(TYPE, CHARSET));
+
+        InputStreamReader isr =
+                new InputStreamReader(t.getRequestBody(),"utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+
+        if(query != null)
+        {
+            Map<String, Object> parameters = parseQuery(query);
+
+            Database db = Database.getInstance();
+
+            Element element = new Element(Integer.parseInt(parameters.get("key").toString()));
+            element.setName(parameters.get("name").toString());
+            element.setQuantity(Integer.parseInt(parameters.get("qty").toString()));
+            db.update(element);
+        }
+
+        String response = "{\"status\": \"OK\"}";
+
+        t.sendResponseHeaders(200, response.length());
+        OutputStream os = t.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    public void insertLogEntry(HttpExchange t) throws IOException
+    {
+        Headers headers = t.getResponseHeaders();
+        headers.set(HEADER_CONTENT_TYPE, String.format(TYPE, CHARSET));
+
+        InputStreamReader isr =
+                new InputStreamReader(t.getRequestBody(),"utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+
+        if(query != null)
+        {
+            Map<String, Object> parameters = parseQuery(query);
+
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            Date today = Calendar.getInstance().getTime();
+            String reportDate = df.format(today);
+
+            String buffer = reportDate + " " + parameters.get("ip").toString() + "\r\n";
+            Path file = Paths.get("logs/entry.txt");
+            java.nio.file.Files.write(file, buffer.getBytes(), StandardOpenOption.APPEND);
+        }
+
+        String response = "{\"status\": \"OK\"}";
+
+        t.sendResponseHeaders(200, response.length());
+        OutputStream os = t.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    public void returnMessage(HttpExchange t) throws IOException
+    {
+        Headers headers = t.getResponseHeaders();
+        headers.set(HEADER_CONTENT_TYPE, String.format(TYPE, CHARSET));
+
+        InputStreamReader isr =
+                new InputStreamReader(t.getRequestBody(),"utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+
+        String response = "";
+        if(query != null)
+        {
+            Map<String, Object> parameters = parseQuery(query);
+
+            response = "{\"status\": \"OK\", \"message\": \"" + parameters.get("message").toString() + "\"}";
+        }
 
         t.sendResponseHeaders(200, response.length());
         OutputStream os = t.getResponseBody();

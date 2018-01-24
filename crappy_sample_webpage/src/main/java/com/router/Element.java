@@ -28,7 +28,7 @@ class Element
         return name;
     }
 
-    void setFirstName(String name)
+    void setName(String name)
     {
         this.name = name;
     }
@@ -43,7 +43,7 @@ class Element
         return qty;
     }
 
-    void setSurname(int qty)
+    void setQuantity(int qty)
     {
         this.qty = qty;
     }

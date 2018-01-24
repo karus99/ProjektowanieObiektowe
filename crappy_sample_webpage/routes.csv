@@ -4,5 +4,10 @@ GET,/first,MainPage,getFirstElement
 GET,/element/[0-9]+,MainPage,getElement
 GET,/api/all,API,getAllElements
 POST,/api/element,API,insertElement
+POST,/api/log/entry,API,insertLogEntry
+POST,/api/message,API,returnMessage
 DELETE,/api/element,API,deleteElement
+PUT,/api/element,API,updateElement
 GET,/js/.*\.js,Files,getFile
+GET,/css/.*\.css,Files,getFile
+GET,/logs/.*\.txt,Files,getFile

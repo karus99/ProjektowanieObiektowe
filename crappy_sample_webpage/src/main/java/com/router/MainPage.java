@@ -27,6 +27,8 @@ public class MainPage
             {
                 isFirst = false;
                 values.put("GET4_FIRST_KEY", String.valueOf(element.getKey()));
+                values.put("PUT1_FIRST_NAME", element.getName());
+                values.put("PUT1_FIRST_QTY", String.valueOf(element.getQuantity()));
             }
 
             elementsString += "<option value=\"" + element.getKey() +"\">" + element.getName() + "</option>";

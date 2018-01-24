@@ -52,10 +52,41 @@
         <button type="submit" class="btn btn-primary">POST data</button>
     </form>
     <hr>
+    <h4>POST Example #2</h4>
+    <p>
+        Every time you entry this site your ip is logged to file through POST. You can view them by clicking this link:
+        <a class="btn btn-outline-primary" href="/logs/entry.txt">Go There <span class="badge badge-default">/logs/entry.txt</span></a>
+    </p>
+    <hr>
+    <h4>POST Example #3</h4>
+    <form action="/api/message" method="POST">
+        <div class="form-group">
+            <label for="post3_message">Message</label>
+            <input id="post3_message" class="form-control" type="text" name="message" placeholder="Input some message..."/>
+        </div>
+        <button type="submit" class="btn btn-primary">POST data</button>
+    </form>
+    <hr>
     <h4>DELETE Example #1</h4>
     <form action="/api/element" method="DELETE">
         <select id="delete1_key" name="key">
             {{DELETE1_ELEMENTS}}
         </select>
         <button id="delete1_submit" type="button" class="btn btn-primary">DELETE data</button>
+    </form>
+    <hr>
+    <h4>PUT Example #1</h4>
+    <form action="/api/element" method="PUT">
+        <select id="put1_key" name="key">
+            {{DELETE1_ELEMENTS}}
+        </select>
+        <div class="form-group">
+            <label for="put1_name">Name</label>
+            <input id="put1_name" class="form-control" type="text" name="name" placeholder="Input name of element..." value="{{PUT1_FIRST_NAME}}"/>
+        </div>
+        <div class="form-group">
+            <label for="put1_qty">Qty.</label>
+            <input id="put1_qty" class="form-control" type="number" name="qty" placeholder="Input element's quantity..." value="{{PUT1_FIRST_QTY}}"/>
+        </div>
+        <button id="put1_submit" type="button" class="btn btn-primary">PUT data</button>
     </form>

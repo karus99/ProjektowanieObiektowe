@@ -21,6 +21,15 @@ public class Files
         {
             case "js":
                 response = new String(java.nio.file.Files.readAllBytes(Paths.get("content/javascripts/" + pathArray[2])));
+                break;
+
+            case "css":
+                response = new String(java.nio.file.Files.readAllBytes(Paths.get("content/stylesheets/" + pathArray[2])));
+                break;
+
+            case "logs":
+                response = new String(java.nio.file.Files.readAllBytes(Paths.get("logs/" + pathArray[2])));
+                break;
         }
 
         t.sendResponseHeaders(200, response.length());
