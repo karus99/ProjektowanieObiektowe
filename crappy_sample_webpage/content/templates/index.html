@@ -10,33 +10,33 @@
     <h4>GET Example #1</h4>
     <p>
         This page :D<br/>
-        <a class="btn btn-outline-primary" href="/">Go There <span class="badge badge-default">/</span></a>
+        <a class="btn btn-outline-primary pull-right" href="/">Go There <span class="badge badge-default">/</span></a>
     </p>
     <hr>
     <h4>GET Example #2</h4>
     <p>
         List of all elements<br/>
-        <a class="btn btn-outline-primary" href="/all">Go There <span class="badge badge-default">/all</span></a>
+        <a class="btn btn-outline-primary pull-right" href="/all">Go There <span class="badge badge-default">/all</span></a>
     </p>
     <hr>
     <h4>GET Example #3</h4>
     <p>
         Only #1 element<br/>
-        <a class="btn btn-outline-primary" href="/first">Go There <span class="badge badge-default">/first</span></a>
+        <a class="btn btn-outline-primary pull-right" href="/first">Go There <span class="badge badge-default">/first</span></a>
     </p>
     <hr>
     <h4>GET Example #4</h4>
     <p>
-        <select name="get4_elements">
+        <select class="form-control" name="get4_elements">
             {{GET4_ELEMENTS}}
         </select>
-        <a id="get4_a" class="btn btn-outline-primary" href="/element/{{GET4_FIRST_KEY}}">Go There <span id="get4_badge" class="badge badge-default">/element/{{GET4_FIRST_KEY}}</span></a>
+        <a id="get4_a" class="btn btn-outline-primary pull-right" href="/element/{{GET4_FIRST_KEY}}">Go There <span id="get4_badge" class="badge badge-default">/element/{{GET4_FIRST_KEY}}</span></a>
     </p>
     <hr>
     <h4>GET Example #5</h4>
     <p>
         List of all elements in JSON form<br/>
-        <a class="btn btn-outline-primary" href="/api/all">Go There <span class="badge badge-default">/api/all</span></a>
+        <a class="btn btn-outline-primary pull-right" href="/api/all">Go There <span class="badge badge-default">/api/all</span></a>
     </p>
     <hr>
     <h4>POST Example #1</h4>
@@ -49,13 +49,13 @@
             <label for="post1_qty">Qty.</label>
             <input id="post1_qty" class="form-control" type="number" name="qty" placeholder="Input element's quantity..."/>
         </div>
-        <button type="submit" class="btn btn-primary">POST data</button>
+        <button type="submit" class="btn btn-primary pull-right">POST data</button>
     </form>
     <hr>
     <h4>POST Example #2</h4>
     <p>
-        Every time you entry this site your ip is logged to file through POST. You can view them by clicking this link:
-        <a class="btn btn-outline-primary" href="/logs/entry.txt">Go There <span class="badge badge-default">/logs/entry.txt</span></a>
+        Every time you entry this site your ip is logged to file through POST. You can view them by clicking this link:<br/>
+        <a class="btn btn-outline-primary pull-right" href="/logs/entry.txt">Go There <span class="badge badge-default">/logs/entry.txt</span></a>
     </p>
     <hr>
     <h4>POST Example #3</h4>
@@ -64,20 +64,20 @@
             <label for="post3_message">Message</label>
             <input id="post3_message" class="form-control" type="text" name="message" placeholder="Input some message..."/>
         </div>
-        <button type="submit" class="btn btn-primary">POST data</button>
+        <button type="submit" class="btn btn-primary pull-right">POST data</button>
     </form>
     <hr>
     <h4>DELETE Example #1</h4>
     <form action="/api/element" method="DELETE">
-        <select id="delete1_key" name="key">
+        <select class="form-control" id="delete1_key" name="key">
             {{DELETE1_ELEMENTS}}
         </select>
-        <button id="delete1_submit" type="button" class="btn btn-primary">DELETE data</button>
+        <button id="delete1_submit" type="button" class="btn btn-primary pull-right">DELETE data</button>
     </form>
     <hr>
     <h4>PUT Example #1</h4>
     <form action="/api/element" method="PUT">
-        <select id="put1_key" name="key">
+        <select class="form-control" id="put1_key" name="key">
             {{DELETE1_ELEMENTS}}
         </select>
         <div class="form-group">
@@ -88,5 +88,5 @@
             <label for="put1_qty">Qty.</label>
             <input id="put1_qty" class="form-control" type="number" name="qty" placeholder="Input element's quantity..." value="{{PUT1_FIRST_QTY}}"/>
         </div>
-        <button id="put1_submit" type="button" class="btn btn-primary">PUT data</button>
+        <button id="put1_submit" type="button" class="btn btn-primary pull-right">PUT data</button>
     </form>
